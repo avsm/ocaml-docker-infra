@@ -1,0 +1,14 @@
+opam-version: "1.2"
+name: "docker-infra"
+version: "1.0.0"
+maintainer: "Anil Madhavapeddy <anil@recoil.org>"
+authors: "Anil Madhavapeddy <anil@recoil.org>"
+homepage: "https://github.com/avsm/ocaml-docker-infra"
+dev-repo: "https://github.com/avsm/ocaml-docker-infra.git"
+bug-reports: "https://github.com/avsm/ocaml-docker-infra/issues"
+license: "ISC"
+depends: [
+  "dockerfile" {>="1.2.0"}
+  "ocamlscript" {>="2.0.4"}
+  "cmdliner"
+]
