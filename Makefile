@@ -6,13 +6,18 @@ all:
 	./dockerfile-ocaml.ml
 	./dockerfile-opam.ml
 	./dockerfile-archive.ml
+	./dockerfile-gen.ml -o opam-dev-dockerfiles -g jenga core_extended utop
 
 depend:
 	opam install -y ocamlscript dockerfile
-	for i in $(REPO); do \
+	for i in $(REPOS); do \
 		rm -rf $$i && \
 		git clone git://github.com/ocaml/$$i && \
 		git -C $$i remote add worigin git@github.com:ocaml/$$i; done
+	rm -rf opam-dev-dockerfiles
+	git clone git://github.com/avsm/opam-dev-dockerfiles
+	git -C opam-dev-dockerfiles remote add worigin git@github.com:avsm/opam-dev-dockerfiles
+
 push-%:
 	git -C $*-dockerfiles push worigin --all --force
 
