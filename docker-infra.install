@@ -1,0 +1,6 @@
+bin: [
+  "dockerfile-ocaml.ml" {"dockerfile-ocaml"}
+  "dockerfile-opam.ml" {"dockerfile-opam"}
+  "dockerfile-archive.ml" {"dockerfile-archive"}
+  "dockerfile-gen.ml" {"dockerfile-gen"}
+]
