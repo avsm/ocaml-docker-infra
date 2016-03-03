@@ -7,6 +7,8 @@ all:
 
 depend:
 	opam install -y ocamlscript dockerfile
+	for i in ocaml-dockerfiles opam-dockerfiles opam-archive-dockerfiles; do \
+		rm -rf $$i && git clone git://github.com/ocaml/$$i; done
 
 clean:
 	rm -f *.ml.exe
