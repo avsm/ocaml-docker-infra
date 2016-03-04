@@ -8,14 +8,15 @@ open Dockerfile
 open Dockerfile_opam
 module DD = Dockerfile_distro
 
-let generate remotes pins dev_pins packages odir use_git (ocaml_versions:Bytes.t list) =
+let generate remotes pins dev_pins packages odir use_git distros ocaml_versions =
   let tag_prefix = "release-" in
   List.iter (fun (name,url) -> Printf.eprintf "remote : %s,%s\n%!" name url) remotes;
   List.iter (fun (pkg,url) -> Printf.eprintf "pins : %s,%s\n%!" pkg url) pins;
   List.iter (Printf.eprintf "dev-pins : %s\n%!") dev_pins;
   List.iter (Printf.eprintf "package: %s\n%!") packages;
+  Printf.eprintf "distros: %s\n%!" (String.concat "," (List.map DD.tag_of_distro distros));
   let npins = List.length pins + (List.length dev_pins) in
-  let filter (distro,ov,_) = List.mem ov ocaml_versions in
+  let filter (d,ov,_) = (List.mem ov ocaml_versions) && (List.mem d distros) in
   let matrix =
     DD.map ~filter ~org:"ocaml/opam"
       (fun ~distro ~ocaml_version base ->
@@ -35,7 +36,7 @@ let generate remotes pins dev_pins packages odir use_git (ocaml_versions:Bytes.t
      them over the latest tag with a compiler switch *)
   let unknown_compilers = List.filter (fun v -> not (List.mem v DD.ocaml_versions)) ocaml_versions in
   let unknown_matrix = List.flatten (List.map (fun unknown_version ->
-    DD.map ~filter:(fun (_,ov,_) -> ov = "4.02.3")
+    DD.map ~filter:(fun (d,ov,_) -> (ov = "4.02.3") && (List.mem d distros))
       (fun ~distro ~ocaml_version base ->
         let dfile =
           (((base @@@
@@ -113,7 +114,7 @@ let packages =
 
 let ocaml_versions =
   let versions =
-    let prser s =
+    let parse s =
       match Str.(split (regexp_string ",") s) with
       | [] -> `Error "empty string for OCaml versions"
       | vs -> `Ok (List.flatten (
@@ -123,11 +124,40 @@ let ocaml_versions =
             |"all" -> ["4.00.1";"4.01.0";"4.02.3";"4.03.0+trunk"]
             |v -> [v]) vs))
      in
-     let printer ppf vs = Format.fprintf ppf "%s" (String.concat "," vs) in
-     prser, printer
+     let print ppf vs =
+       Format.fprintf ppf "%s" (String.concat "," vs) in
+     parse, print
   in
   let doc = "Comma-separated list of compiler switches to use, such as 4.02.3. Can use $(i,stable), $(i,dev) and $(i,all) as aliases to the stable compiler, the development branch and all supported compilers. If the compiler is not recognised as one of the prebuilt images, then a local switch will be performed." in
   Arg.(value & opt versions ["4.02.3";"4.03.0+beta1"] & info ["c";"compilers"] ~docv:"COMPILERS" ~doc)
+
+let distros =
+  let distros =
+   let parse s =
+      let rec fn d acc =
+        match d with
+        | [] -> `Ok acc
+        | hd::tl -> begin
+            match hd with
+            |"all" -> `Ok DD.distros
+            |hd -> begin
+              match DD.distro_of_tag hd with
+              | None -> raise (Failure ("unknown distro " ^ hd))
+              | Some d -> fn tl (d::acc)
+            end
+        end
+     in try fn (Str.(split (regexp_string ",") s)) [] with Failure e -> `Error e
+   in
+   let print ppf l =
+     let s =
+       if (List.sort compare l = (List.sort compare DD.distros)) then "all" else 
+         String.concat "," (List.map DD.tag_of_distro l)
+     in
+     Format.fprintf ppf "%s" s in
+   parse, print
+  in
+  let doc = "Comma-separated list of distributions to generate, such as debian-7,alpine-3.3. Can use $(i,all) as an alias for all the supported distributions." in
+  Arg.(value & opt distros DD.distros & info ["d";"distros"] ~docv:"DISTROS" ~doc)
 
 let cmd =
   let doc = "generate Dockerfiles for an OCaml/OPAM project" in
@@ -139,8 +169,8 @@ let cmd =
     `S "SEE ALSO";
     `P "$(b,opam)(1)" ]
   in
-  Term.(pure generate $ remotes $ pins $ dev_pins $ packages $ odir $ use_git $ ocaml_versions),
-  Term.info "opam-dockerfile" ~version:"1.0.0" ~doc ~man
+  Term.(pure generate $ remotes $ pins $ dev_pins $ packages $ odir $ use_git $ distros $ ocaml_versions),
+  Term.info "opam-dockerfile-gen" ~version:"1.0.0" ~doc ~man
 
 let () =
   match Term.eval cmd
