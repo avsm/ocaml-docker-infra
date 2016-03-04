@@ -24,7 +24,6 @@ let generate odir =
     Linux.Apk.dev_packages () @@
     run "cd /etc/apk/keys && curl -OL http://www.cl.cam.ac.uk/~avsm2/alpine-ocaml/x86_64/anil@recoil.org-5687cc79.rsa.pub" @@
     run "echo http://www.cl.cam.ac.uk/~avsm2/alpine-ocaml/ >> /etc/apk/repositories" @@
-    Linux.Apk.update @@
     Linux.Apk.install "ocaml camlp4"
   in
   Dockerfile_distro.generate_dockerfiles_in_git_branches odir [
