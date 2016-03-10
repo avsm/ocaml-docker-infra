@@ -19,8 +19,7 @@ let generate output_dir =
     expose_port 8081 @@
     cmd "opam config exec -- cohttp-server-lwt -p 8081"
   in
-  Dockerfile_distro.generate_dockerfiles output_dir
-    [ "opam-archive", opam_archive ]
+  Dockerfile_distro.generate_dockerfile output_dir opam_archive
 
 let _ =
   Dockerfile_opam_cmdliner.cmd
