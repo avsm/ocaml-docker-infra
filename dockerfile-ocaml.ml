@@ -36,6 +36,8 @@ let generate odir =
      "debian-9", apt_base "debian" "stretch"; (* 9 isnt tagged on Hub yet *)
      "debian-8", apt_base "debian" "8";
      "debian-7", apt_base "debian" "7";
+     "raspbian-8", apt_base "resin/rpi-raspbian" "jessie";
+     "raspbian-7", apt_base "resin/rpi-raspbian" "wheezy";
      "debian", apt_base "debian" "stable";
      "debian-stable", apt_base "debian" "stable";
      "master", apt_base "debian" "stable";
