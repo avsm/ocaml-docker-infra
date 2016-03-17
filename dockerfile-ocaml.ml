@@ -5,26 +5,23 @@ Ocaml.packs := ["dockerfile.opam"; "dockerfile.opam-cmdliner"]
    for that distribution.  ISC License is at the end of the file. *)
 
 open Dockerfile
-open Dockerfile_opam
 
 let generate odir =
   let maintainer = "Anil Madhavapeddy <anil@recoil.org>" in
   let apt_base base tag  = 
-    header ~maintainer base tag @@
-    Apt.install_base_packages @@
-    Apt.install_system_ocaml
+    Dockerfile_opam.header ~maintainer base tag @@
+    Linux.Apt.dev_packages () @@
+    Linux.Apt.install_system_ocaml
   in
   let rpm_base ?(ocaml=true) base tag =
-    header ~maintainer base tag @@
-    RPM.install_base_packages @@
-    (if ocaml then RPM.install_system_ocaml else empty)
+    Dockerfile_opam.header ~maintainer base tag @@
+    Linux.RPM.dev_packages () @@
+    (if ocaml then Linux.RPM.install_system_ocaml else empty)
   in
   let apk_base base tag = 
-    header ~maintainer base tag @@
+    Dockerfile_opam.header ~maintainer base tag @@
     Linux.Apk.dev_packages () @@
-    run "cd /etc/apk/keys && curl -OL http://www.cl.cam.ac.uk/~avsm2/alpine-ocaml/x86_64/anil@recoil.org-5687cc79.rsa.pub" @@
-    run "echo http://www.cl.cam.ac.uk/~avsm2/alpine-ocaml/ >> /etc/apk/repositories" @@
-    Linux.Apk.install "ocaml camlp4"
+    Linux.Apk.install_system_ocaml
   in
   Dockerfile_distro.generate_dockerfiles_in_git_branches odir [
      "ubuntu-12.04", apt_base "ubuntu" "precise";
@@ -59,7 +56,7 @@ let generate odir =
 let _ =
   Dockerfile_opam_cmdliner.cmd
     ~name:"dockerfile-ocaml"
-    ~version:"1.1.0"
+    ~version:"1.2.0"
     ~summary:"the OCaml compiler"
     ~manual:"installs the OCaml byte and native code compiler and the
              Camlp4 preprocessor.  The version of OCaml that is installed

@@ -8,7 +8,6 @@ open Dockerfile_opam
 module DD = Dockerfile_distro
 
 let generate remotes pins dev_pins packages pr odir use_git distros ocaml_versions =
-  let tag_prefix = "release-" in
   List.iter (fun (name,url) -> Printf.eprintf "remote : %s,%s\n%!" name url) remotes;
   List.iter (fun (pkg,url) -> Printf.eprintf "pins : %s,%s\n%!" pkg url) pins;
   List.iter (Printf.eprintf "dev-pins : %s\n%!") dev_pins;
@@ -31,7 +30,7 @@ let generate remotes pins dev_pins packages pr odir use_git distros ocaml_versio
           run_as_opam "opam depext -u %s" (String.concat " " packages) @@
           run_as_opam "opam install -y -j 2 -v %s" (String.concat " " packages)
         in
-        let tag = tag_prefix ^ (DD.opam_tag_of_distro distro ocaml_version) in
+        let tag = DD.opam_tag_of_distro distro ocaml_version in
         (tag, dfile))
   in
   (* If there are unknown compiler versions for which there is no premade tag, base
@@ -50,7 +49,7 @@ let generate remotes pins dev_pins packages pr odir use_git distros ocaml_versio
           run_as_opam "opam depext -u %s" (String.concat " " packages) @@
           run_as_opam "opam install -y -j 2 -v %s" (String.concat " " packages)
         in
-        let tag = tag_prefix ^ (DD.opam_tag_of_distro distro unknown_version) in
+        let tag = DD.opam_tag_of_distro distro unknown_version in
         (tag, dfile))
     ) unknown_compilers)
   in
@@ -62,12 +61,6 @@ let generate remotes pins dev_pins packages pr odir use_git distros ocaml_versio
         let branch = Printf.sprintf "release_%s" (DD.opam_tag_of_distro distro ocaml_version) in
         let dfile =
           base @@
-          run "mkdir /home/opam/.ssh" @@
-          add ~src:[".ssh-logs/mirage-bulk-logs_id_rsa"] ~dst:"/home/opam/.ssh/id_rsa" @@
-          add ~src:[".ssh-logs/mirage-bulk-logs_id_rsa.pub"] ~dst:"/home/opam/.ssh/id_rsa.pub" @@
-          run "sudo chown -R opam /home/opam/.ssh/*" @@
-          run "chmod -R 600 /home/opam/.ssh/*" @@
-          run "touch /home/opam/.ssh/known_hosts" @@
           run "ssh-keyscan github.com >> /home/opam/.ssh/known_hosts" @@
           run "git clone git@github.com:avsm/mirage-bulk-logs /home/opam/logs" @@
           workdir "/home/opam/logs" @@
@@ -82,7 +75,7 @@ let generate remotes pins dev_pins packages pr odir use_git distros ocaml_versio
         in
         let tag = tag_prefix ^ (DD.opam_tag_of_distro distro ocaml_version) in
         (tag, dfile))
-in
+  in
 *)
   match use_git with
   | true -> Dockerfile_distro.generate_dockerfiles_in_git_branches odir matrix
@@ -107,7 +100,7 @@ let dev_pins =
   Arg.(value & opt_all string [] & info ["dev-pin"] ~docv:"DEV-PIN" ~doc)
 
 let odir =
-  let doc = "Output directory to place the generated Dockerfile into." in
+  let doc = "Output directory to place the generated Dockerfile into.  If not specified then all the Dockerfiles will be suffixed with their release in the filename." in
   Arg.(value & opt string "." & info ["o";"output-dir"] ~docv:"OUTPUT_DIR" ~doc)
 
 let use_git =
