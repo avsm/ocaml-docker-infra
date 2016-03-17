@@ -7,26 +7,24 @@ open Dockerfile
 open Dockerfile_opam
 module DD = Dockerfile_distro
 
-let generate remotes pins dev_pins packages pr odir use_git distros ocaml_versions =
+let generate remotes pins dev_pins packages prs odir use_git distros ocaml_versions =
   List.iter (fun (name,url) -> Printf.eprintf "remote : %s,%s\n%!" name url) remotes;
   List.iter (fun (pkg,url) -> Printf.eprintf "pins : %s,%s\n%!" pkg url) pins;
   List.iter (Printf.eprintf "dev-pins : %s\n%!") dev_pins;
   List.iter (Printf.eprintf "package: %s\n%!") packages;
   Printf.eprintf "distros: %s\n%!" (String.concat "," (List.map DD.tag_of_distro distros));
-  Printf.eprintf "PR branch: %s\n%!" (match pr with None -> "<master>" |Some (p,v) -> (p^"#"^v));
   let npins = List.length pins + (List.length dev_pins) in
   let filter (d,ov,_) = (List.mem ov ocaml_versions) && (List.mem d distros) in
   let matrix =
     DD.map ~filter ~org:"ocaml/opam"
       (fun ~distro ~ocaml_version base ->
         let dfile =
-          (((base @@@
+          ((((base @@@
           List.map (fun (name,url) -> run_as_opam "opam remote add %s %s" name url) remotes) @@@
+          List.map (fun (p,v) -> run_as_opam "cd /home/opam/opam-repository && git pull %s %s && opam update -u" p v) prs) @@@
           List.map (fun (pkg,url) -> run_as_opam "opam pin add -n %s %s" pkg url) pins) @@@
           List.map (run_as_opam "opam pin add -n %s --dev") dev_pins) @@
           (if npins > 0 then run_as_opam "opam update -u" else empty) @@
-          (match pr with None -> empty
-            |Some (p,v)-> run_as_opam "cd /home/opam/opam-repository && git pull %s %s && opam update -u" p v) @@
           run_as_opam "opam depext -u %s" (String.concat " " packages) @@
           run_as_opam "opam install -y -j 2 -v %s" (String.concat " " packages)
         in
@@ -89,7 +87,7 @@ let remotes =
 
 let pr =
   let doc = "OPAM repository branch to merge against current OPAM repository (format: url,branch)" in
-  Arg.(value & opt (some (pair string string)) None & info ["b";"branch"] ~docv:"OPAM_REPO_BRANCH" ~doc)
+  Arg.(value & opt_all (pair string string) [] & info ["b";"branch"] ~docv:"OPAM_REPO_BRANCH" ~doc)
 
 let pins =
   let doc = "OPAM package pin to add to the generated Dockerfile (format: package,url)" in
