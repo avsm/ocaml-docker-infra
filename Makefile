@@ -6,7 +6,7 @@ all:
 	./dockerfile-ocaml.ml
 	./dockerfile-opam.ml
 	./dockerfile-archive.ml && (cd opam-archive-dockerfiles && git commit -m sync -a)
-	./dockerfile-gen.ml -c all -g -o opam-dev-dockerfiles merlin utop mirage tuareg lwt core
+	./dockerfile-gen.ml -c all -g -o opam-dev-dockerfiles merlin utop tuareg lwt core
 
 depend:
 	opam install -y ocamlscript dockerfile
