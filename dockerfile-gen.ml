@@ -33,7 +33,7 @@ let generate remotes pins dev_pins packages prs odir use_git distros ocaml_versi
   in
   (* If there are unknown compiler versions for which there is no premade tag, base
      them over the latest tag with a compiler switch *)
-  let unknown_compilers = List.filter (fun v -> not (List.mem v DD.ocaml_versions)) ocaml_versions in
+  let unknown_compilers = List.filter (fun v -> not (List.mem v DD.stable_ocaml_versions)) ocaml_versions in
   let unknown_matrix = List.flatten (List.map (fun unknown_version ->
     DD.map ~filter:(fun (d,ov,_) -> (ov = "4.02.3") && (List.mem d distros))
       (fun ~distro ~ocaml_version base ->
