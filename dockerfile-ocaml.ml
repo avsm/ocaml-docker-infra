@@ -6,7 +6,7 @@ Ocaml.packs := ["dockerfile.opam"; "dockerfile.opam-cmdliner"]
 
 open Dockerfile
 
-let generate odir =
+let generate ~opam_version ~output_dir =
   let maintainer = "Anil Madhavapeddy <anil@recoil.org>" in
   let apt_base base tag  = 
     Dockerfile_opam.header ~maintainer base tag @@
@@ -21,20 +21,20 @@ let generate odir =
   let apk_base base tag = 
     Dockerfile_opam.header ~maintainer base tag @@
     Linux.Apk.dev_packages () @@
-    Linux.Apk.install_system_ocaml
+    Linux.Apk.install_system_ocaml ~version:tag
   in
-  Dockerfile_distro.generate_dockerfiles_in_git_branches odir [
+  Dockerfile_distro.generate_dockerfiles_in_git_branches output_dir [
      "ubuntu-12.04", apt_base "ubuntu" "precise";
      "ubuntu-14.04", apt_base "ubuntu" "trusty";
      "ubuntu-15.04", apt_base "ubuntu" "vivid";
      "ubuntu-15.10", apt_base "ubuntu" "wily";
      "ubuntu-16.04", apt_base "ubuntu" "xenial";
-     "ubuntu", apt_base "ubuntu" "wily"; (* latest stable ubuntu *)
+     "ubuntu-16.10", apt_base "ubuntu" "yakkety";
+     "ubuntu", apt_base "ubuntu" "xenial"; (* latest stable ubuntu *)
      "debian-9", apt_base "debian" "stretch"; (* 9 isnt tagged on Hub yet *)
      "debian-8", apt_base "debian" "8";
      "debian-7", apt_base "debian" "7";
      "raspbian-8", apt_base "resin/rpi-raspbian" "jessie";
-     "raspbian-7", apt_base "resin/rpi-raspbian" "wheezy";
      "debian", apt_base "debian" "stable";
      "debian-stable", apt_base "debian" "stable";
      "master", apt_base "debian" "stable";
@@ -48,9 +48,10 @@ let generate odir =
      "fedora", rpm_base "fedora" "23"; (* latest fedora *)
      "oraclelinux-7", rpm_base ~ocaml:false "oraclelinux" "7";
      "oraclelinux", rpm_base ~ocaml:false "oraclelinux" "7"; (* latest oraclelinux *)
+     "alpine-3.4", apk_base "alpine" "3.4";
      "alpine-3.3", apk_base "alpine" "3.3";
-     "alpine-3", apk_base "alpine" "3.3";
-     "alpine", apk_base "alpine" "3.3"; (* latest alpine *)
+     "alpine-3", apk_base "alpine" "3.4";
+     "alpine", apk_base "alpine" "3.4"; (* latest alpine *)
   ]
 
 let _ =

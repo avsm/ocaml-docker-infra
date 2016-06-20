@@ -5,11 +5,12 @@ Ocaml.packs := ["dockerfile.opam"; "dockerfile.opam-cmdliner"]
    ISC License is at the end of the file. *)
 
 let pin = Some "depext https://github.com/ocaml/opam-depext.git"
-let matrix = Dockerfile_distro.dockerfile_matrix ?pin ()
-let latest_matrix = Dockerfile_distro.latest_dockerfile_matrix ?pin ()
+let extra = Dockerfile_distro.slow_distros
+let matrix ~opam_version () = Dockerfile_distro.dockerfile_matrix ~opam_version ~extra ?pin ()
+let latest_matrix ~opam_version () = Dockerfile_distro.latest_dockerfile_matrix ~opam_version ~extra ?pin ()
 
 (* Generate Markdown list of tags for the README master *)
-let master_markdown_index =
+let master_markdown_index ~opam_version =
   let open Dockerfile_distro in
   let open Printf in
   let system = "&#127362;" in
@@ -34,7 +35,7 @@ let master_markdown_index =
      let tag = latest_tag_of_distro distro in
      let sws = gen_sws distro latest_ocaml_version in
      sprintf "%s | %s | `docker pull ocaml/opam:%s`" name sws tag;
-  ) latest_matrix @
+  ) (latest_matrix ~opam_version ()) @
   [sprintf "\nThere are also individual containers available for each combination
    of an OS distribution and an OCaml revision. These should be useful for
    testing and continuous integration, since they will remain pinned to these
@@ -53,7 +54,7 @@ let master_markdown_index =
       | Some v -> sprintf "%s %s" ocaml_version default
     in
     sprintf "%s | %s | `docker pull ocaml/opam:%s`" name sws tag
-  ) matrix @
+  ) (matrix ~opam_version ()) @
   ["\n\nUsing the Containers\n================\n";
   "Each container comes with an initialised OPAM repository pointing to the central repository. The default user in the container is called `opam`, and `sudo` is configured to allow password-less access to `root`.\n";
   "To build an environment for the [Jane Street Core](https://realworldocaml.org/) library on the latest stable OCaml, a simple Dockerfile looks like this:\n";
@@ -66,15 +67,15 @@ let master_markdown_index =
   |> String.concat "\n"
 
  (* Generate a git branch per Dockerfile combination *)
-let generate output_dir =
+let generate ~opam_version ~output_dir =
   let open Dockerfile_distro in
-  [("master", to_dockerfile ?pin ~ocaml_version:latest_ocaml_version ~distro:master_distro ())]
-    |> generate_dockerfiles_in_git_branches ~readme:master_markdown_index ~crunch:true output_dir;
+  [("master", to_dockerfile ?pin ~opam_version ~ocaml_version:latest_ocaml_version ~distro:master_distro ())]
+    |> generate_dockerfiles_in_git_branches ~readme:(master_markdown_index ~opam_version) ~crunch:true output_dir;
   List.map (fun (distro,ocamlv,dfile) ->
-    (opam_tag_of_distro distro ocamlv), dfile) matrix
+    (opam_tag_of_distro distro ocamlv), dfile) (matrix ~opam_version ())
     |> generate_dockerfiles_in_git_branches ~crunch:true output_dir;
   List.map (fun (distro,dfile) ->
-    (latest_tag_of_distro distro), dfile) latest_matrix
+    (latest_tag_of_distro distro), dfile) (latest_matrix ~opam_version ())
     |> generate_dockerfiles_in_git_branches ~crunch:true output_dir
  
 let _ =

@@ -7,7 +7,7 @@ Ocaml.packs := ["dockerfile.opam"; "dockerfile.opam-cmdliner"]
 open Dockerfile
 open Dockerfile_opam
 
-let generate output_dir =
+let generate ~opam_version ~output_dir =
   let opam_archive =
     header "ocaml/opam" "latest" @@
     run_as_opam "cd /home/opam/opam-repository && git pull origin master" @@
