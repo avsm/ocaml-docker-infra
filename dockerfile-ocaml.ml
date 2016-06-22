@@ -23,6 +23,11 @@ let generate ~opam_version ~output_dir =
     Linux.Apk.dev_packages () @@
     Linux.Apk.install_system_ocaml ~version:tag
   in
+  let zypper_base base tag =
+    Dockerfile_opam.header ~maintainer base tag @@
+    Linux.Zypper.dev_packages () @@
+    Linux.Zypper.install_system_ocaml
+  in
   Dockerfile_distro.generate_dockerfiles_in_git_branches output_dir [
      "ubuntu-12.04", apt_base "ubuntu" "precise";
      "ubuntu-14.04", apt_base "ubuntu" "trusty";
@@ -52,6 +57,10 @@ let generate ~opam_version ~output_dir =
      "alpine-3.3", apk_base "alpine" "3.3";
      "alpine-3", apk_base "alpine" "3.4";
      "alpine", apk_base "alpine" "3.4"; (* latest alpine *)
+     "alpine-armhf-3.4", apk_base "justincormack/armhf-alpine" "3.4";
+     "alpine-armhf", apk_base "justincormack/armhf-alpine" "3.4"; (* latest alpine armhf *)
+     "opensuse-42.1", zypper_base "opensuse" "42.1";
+     "opensuse", zypper_base "opensuse" "42.1"; (* latest opensuse *)
   ]
 
 let _ =
