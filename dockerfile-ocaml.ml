@@ -50,7 +50,8 @@ let generate ~opam_version ~output_dir =
      "fedora-21", rpm_base "fedora" "21";
      "fedora-22", rpm_base "fedora" "22";
      "fedora-23", rpm_base "fedora" "23";
-     "fedora", rpm_base "fedora" "23"; (* latest fedora *)
+     "fedora-24", rpm_base "fedora" "24";
+     "fedora", rpm_base "fedora" "24"; (* latest fedora *)
      "oraclelinux-7", rpm_base ~ocaml:false "oraclelinux" "7";
      "oraclelinux", rpm_base ~ocaml:false "oraclelinux" "7"; (* latest oraclelinux *)
      "alpine-3.4", apk_base "alpine" "3.4";
