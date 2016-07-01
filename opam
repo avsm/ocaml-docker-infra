@@ -8,7 +8,7 @@ dev-repo: "https://github.com/avsm/ocaml-docker-infra.git"
 bug-reports: "https://github.com/avsm/ocaml-docker-infra/issues"
 license: "ISC"
 depends: [
-  "dockerfile-opam" {>="1.5.0"}
+  "dockerfile" {>="1.7.0"}
   "ocamlscript" {>="2.0.4"}
   "cmdliner"
 ]
