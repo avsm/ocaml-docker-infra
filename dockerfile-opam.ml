@@ -4,7 +4,7 @@ Ocaml.packs := ["dockerfile.opam"; "dockerfile.opam-cmdliner"]
 (* Generate OPAM base images with particular revisions of OCaml and OPAM.
    ISC License is at the end of the file. *)
 
-let pin = Some "depext https://github.com/ocaml/opam-depext.git"
+let pin = None
 let extra = Dockerfile_distro.slow_distros
 let matrix ~opam_version () = Dockerfile_distro.dockerfile_matrix ~opam_version ~extra ?pin ()
 let latest_matrix ~opam_version () = Dockerfile_distro.latest_dockerfile_matrix ~opam_version ~extra ?pin ()
