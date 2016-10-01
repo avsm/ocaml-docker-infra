@@ -6,7 +6,8 @@ Ocaml.packs := ["dockerfile.opam"; "dockerfile.opam-cmdliner"]
 
 let pin = None
 let extra = Dockerfile_distro.slow_distros
-let matrix ~opam_version () = Dockerfile_distro.dockerfile_matrix ~opam_version ~extra ?pin ()
+let extra_ocaml_versions = Dockerfile_distro.dev_ocaml_versions
+let matrix ~opam_version () = Dockerfile_distro.dockerfile_matrix ~opam_version ~extra ~extra_ocaml_versions ?pin ()
 let latest_matrix ~opam_version () = Dockerfile_distro.latest_dockerfile_matrix ~opam_version ~extra ?pin ()
 
 (* Generate Markdown list of tags for the README master *)
