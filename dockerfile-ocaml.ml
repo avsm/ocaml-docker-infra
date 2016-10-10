@@ -15,6 +15,7 @@ let generate ~opam_version ~output_dir =
   in
   let rpm_base ?(ocaml=true) base tag =
     Dockerfile_opam.header ~maintainer base tag @@
+    Linux.RPM.update @@
     Linux.RPM.dev_packages () @@
     (if ocaml then Linux.RPM.install_system_ocaml else empty)
   in
