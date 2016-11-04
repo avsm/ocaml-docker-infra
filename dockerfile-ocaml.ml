@@ -10,24 +10,24 @@ let generate ~opam_version ~output_dir =
   let maintainer = "Anil Madhavapeddy <anil@recoil.org>" in
   let apt_base base tag  = 
     Dockerfile_opam.header ~maintainer base tag @@
-    Linux.Apt.dev_packages () @@
-    Linux.Apt.install_system_ocaml
+    Dockerfile_linux.Apt.dev_packages () @@
+    Dockerfile_linux.Apt.install_system_ocaml
   in
   let rpm_base ?(ocaml=true) base tag =
     Dockerfile_opam.header ~maintainer base tag @@
-    Linux.RPM.update @@
-    Linux.RPM.dev_packages () @@
-    (if ocaml then Linux.RPM.install_system_ocaml else empty)
+    Dockerfile_linux.RPM.update @@
+    Dockerfile_linux.RPM.dev_packages () @@
+    (if ocaml then Dockerfile_linux.RPM.install_system_ocaml else empty)
   in
   let apk_base base tag = 
     Dockerfile_opam.header ~maintainer base tag @@
-    Linux.Apk.dev_packages () @@
-    Linux.Apk.install_system_ocaml ~version:tag
+    Dockerfile_linux.Apk.dev_packages () @@
+    Dockerfile_linux.Apk.install_system_ocaml ~version:tag
   in
   let zypper_base base tag =
     Dockerfile_opam.header ~maintainer base tag @@
-    Linux.Zypper.dev_packages () @@
-    Linux.Zypper.install_system_ocaml
+    Dockerfile_linux.Zypper.dev_packages () @@
+    Dockerfile_linux.Zypper.install_system_ocaml
   in
   Dockerfile_distro.generate_dockerfiles_in_git_branches output_dir [
      "ubuntu-12.04", apt_base "ubuntu" "precise";

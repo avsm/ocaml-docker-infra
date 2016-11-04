@@ -5,7 +5,7 @@ Ocaml.packs := ["dockerfile.opam"; "dockerfile.opam-cmdliner"]
    ISC License is at the end of the file. *)
 
 let pin = None
-let extra = Dockerfile_distro.slow_distros
+let extra = [] (* Dockerfile_distro.slow_distros *)
 let extra_ocaml_versions = Dockerfile_distro.dev_ocaml_versions
 let matrix ~opam_version () = Dockerfile_distro.dockerfile_matrix ~opam_version ~extra ~extra_ocaml_versions ?pin ()
 let latest_matrix ~opam_version () = Dockerfile_distro.latest_dockerfile_matrix ~opam_version ~extra ?pin ()
