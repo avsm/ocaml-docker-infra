@@ -19,10 +19,10 @@ let generate ~opam_version ~output_dir =
     Dockerfile_linux.RPM.dev_packages () @@
     (if ocaml then Dockerfile_linux.RPM.install_system_ocaml else empty)
   in
-  let apk_base base tag = 
+  let apk_base ?(add_custom_apk=false) base tag = 
     Dockerfile_opam.header ~maintainer base tag @@
     Dockerfile_linux.Apk.dev_packages () @@
-    Dockerfile_linux.Apk.install_system_ocaml ~version:tag
+    Dockerfile_linux.Apk.install_system_ocaml ~add_custom_apk tag
   in
   let zypper_base base tag =
     Dockerfile_opam.header ~maintainer base tag @@
@@ -55,14 +55,14 @@ let generate ~opam_version ~output_dir =
      "fedora", rpm_base "fedora" "24"; (* latest fedora *)
      "oraclelinux-7", rpm_base ~ocaml:false "oraclelinux" "7";
      "oraclelinux", rpm_base ~ocaml:false "oraclelinux" "7"; (* latest oraclelinux *)
-     "alpine-3.4", apk_base "alpine" "3.4";
-     "alpine-3.3", apk_base "alpine" "3.3";
-     "alpine-3", apk_base "alpine" "3.4";
-     "alpine", apk_base "alpine" "3.4"; (* latest alpine *)
-     "alpine-armhf-3.4", apk_base "justincormack/armhf-alpine" "3.4";
-     "alpine-armhf", apk_base "justincormack/armhf-alpine" "3.4"; (* latest alpine armhf *)
+     "alpine-3.5", apk_base "alpine" "3.5";
+     "alpine-3.4", apk_base ~add_custom_apk:true "alpine" "3.4";
+     "alpine-3.3", apk_base ~add_custom_apk:true "alpine" "3.3";
+     "alpine-3", apk_base ~add_custom_apk:true "alpine" "3.5";
+     "alpine", apk_base "alpine" "3.5"; (* latest alpine *)
      "opensuse-42.1", zypper_base "opensuse" "42.1";
-     "opensuse", zypper_base "opensuse" "42.1"; (* latest opensuse *)
+     "opensuse-42.2", zypper_base "opensuse" "42.2";
+     "opensuse", zypper_base "opensuse" "42.2"; (* latest opensuse *)
   ]
 
 let _ =
