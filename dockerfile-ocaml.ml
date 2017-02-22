@@ -58,7 +58,7 @@ let generate ~opam_version ~output_dir =
      "alpine-3.5", apk_base "alpine" "3.5";
      "alpine-3.4", apk_base ~add_custom_apk:true "alpine" "3.4";
      "alpine-3.3", apk_base ~add_custom_apk:true "alpine" "3.3";
-     "alpine-3", apk_base ~add_custom_apk:true "alpine" "3.5";
+     "alpine-3", apk_base "alpine" "3.5";
      "alpine", apk_base "alpine" "3.5"; (* latest alpine *)
      "opensuse-42.1", zypper_base "opensuse" "42.1";
      "opensuse-42.2", zypper_base "opensuse" "42.2";
