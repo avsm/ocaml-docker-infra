@@ -22,7 +22,7 @@ let master_markdown_index ~opam_version =
     | Some v when v = ocaml_version -> sprintf "%s %s%s" ocaml_version system default
     | Some v -> sprintf "%s %s, %s %s" v system ocaml_version default
   in
-  [sprintf "This repository contains a set of [Docker](http://docker.com) container definitions for various combination of [OCaml](https://ocaml.org) and the [OPAM](https://opam.ocaml.org) package manager.  The containers all come preinstalled with a working compiler and an OPAM environment.  Using it as simple as:\n\n```\ndocker pull ocaml/opam\ndocker run -ti ocaml/opam bash\n```\n\n...to get a working development environment.  You can grab a specific distribution and test out external dependencies as well:\n```\ndocker run ocaml/opam:ubuntu-14.04_ocaml-4.02.3 opam depext -i cohttp lwt ssl\n```\n";
+  [sprintf "This repository contains a set of [Docker](http://docker.com) container definitions for various combination of [OCaml](https://ocaml.org) and the [OPAM](https://opam.ocaml.org) package manager.  The containers all come preinstalled with a working compiler and an OPAM environment.  Using it as simple as:\n\n```\ndocker pull ocaml/opam\ndocker run -ti ocaml/opam bash\n```\n\n...to get a working development environment.  You can grab a specific distribution and test out external dependencies as well:\n```\ndocker run ocaml/opam:ubuntu-16.04_ocaml-4.04.0 opam depext -i cohttp lwt ssl\n```\n";
    sprintf "Distributions\n==========\n";
    sprintf "The default `latest` tag points to the following distribution:\n";
    sprintf "Distribution | Available Switches | Command";
