@@ -1,5 +1,5 @@
 #!/usr/bin/env ocamlscript
-Ocaml.packs := ["dockerfile.opam"; "dockerfile.opam-cmdliner"]
+Ocaml.packs := ["dockerfile-opam"]
 --
 (* Generate an OPAM archive server that serves content via
    an HTTP server. ISC License is at the end of the file. *)

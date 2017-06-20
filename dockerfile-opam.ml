@@ -1,5 +1,5 @@
 #!/usr/bin/env ocamlscript
-Ocaml.packs := ["dockerfile.opam"; "dockerfile.opam-cmdliner"]
+Ocaml.packs := ["dockerfile-opam"]
 --
 (* Generate OPAM base images with particular revisions of OCaml and OPAM.
    ISC License is at the end of the file. *)

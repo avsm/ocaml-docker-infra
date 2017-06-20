@@ -1,5 +1,5 @@
 #!/usr/bin/env ocamlscript
-Ocaml.packs := ["dockerfile.opam"; "dockerfile.opam-cmdliner"]
+Ocaml.packs := ["dockerfile-opam"]
 --
 (* Generate OCaml base images with the default system installation of OCaml
    for that distribution.  ISC License is at the end of the file. *)
@@ -36,6 +36,7 @@ let generate ~opam_version ~output_dir =
      "ubuntu-15.10", apt_base "ubuntu" "wily";
      "ubuntu-16.04", apt_base "ubuntu" "xenial";
      "ubuntu-16.10", apt_base "ubuntu" "yakkety";
+     "ubuntu-17.04", apt_base "ubuntu" "zesty";
      "ubuntu", apt_base "ubuntu" "xenial"; (* latest stable ubuntu *)
      "debian-9", apt_base "debian" "stretch"; (* 9 isnt tagged on Hub yet *)
      "debian-8", apt_base "debian" "8";
@@ -52,6 +53,7 @@ let generate ~opam_version ~output_dir =
      "fedora-22", rpm_base "fedora" "22";
      "fedora-23", rpm_base "fedora" "23";
      "fedora-24", rpm_base "fedora" "24";
+     "fedora-25", rpm_base "fedora" "25";
      "fedora", rpm_base "fedora" "24"; (* latest fedora *)
      "oraclelinux-7", rpm_base ~ocaml:false "oraclelinux" "7";
      "oraclelinux", rpm_base ~ocaml:false "oraclelinux" "7"; (* latest oraclelinux *)

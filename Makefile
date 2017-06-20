@@ -7,7 +7,6 @@ all:
 	./dockerfile-opam.ml -o opam-dockerfiles --opam-version=1.2
 	./dockerfile-opam.ml -o opam-dev-dockerfiles --opam-version=master
 	./dockerfile-archive.ml && (cd opam-archive-dockerfiles && git commit -m sync -a)
-	#./dockerfile-gen.ml -c 4.02.3,4.03.0 -g -o opam-dev-dockerfiles conf-vim conf-emacs merlin annot utop tuareg lwt jenga
 
 depend:
 	opam install -y ocamlscript dockerfile
