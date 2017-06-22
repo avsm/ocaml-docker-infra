@@ -37,11 +37,11 @@ let generate ~opam_version ~output_dir =
      "ubuntu-16.04", apt_base "ubuntu" "xenial";
      "ubuntu-16.10", apt_base "ubuntu" "yakkety";
      "ubuntu-17.04", apt_base "ubuntu" "zesty";
-     "ubuntu", apt_base "ubuntu" "xenial"; (* latest stable ubuntu *)
-     "debian-9", apt_base "debian" "stretch"; (* 9 isnt tagged on Hub yet *)
+     "ubuntu", apt_base "ubuntu" "xenial"; (* latest lts ubuntu *)
+     "debian-10", apt_base "debian" "buster"; (* 10 isnt tagged on Hub yet *)
+     "debian-9", apt_base "debian" "9";
      "debian-8", apt_base "debian" "8";
      "debian-7", apt_base "debian" "7";
-     "raspbian-8", apt_base "resin/rpi-raspbian" "jessie";
      "debian", apt_base "debian" "stable";
      "debian-stable", apt_base "debian" "stable";
      "master", apt_base "debian" "stable";
@@ -49,19 +49,19 @@ let generate ~opam_version ~output_dir =
      "debian-unstable", apt_base "debian" "unstable";
      "centos-7", rpm_base "centos" "centos7";
      "centos-6", rpm_base "centos" "centos6";
-     "fedora-21", rpm_base "fedora" "21";
      "fedora-22", rpm_base "fedora" "22";
      "fedora-23", rpm_base "fedora" "23";
      "fedora-24", rpm_base "fedora" "24";
      "fedora-25", rpm_base "fedora" "25";
-     "fedora", rpm_base "fedora" "24"; (* latest fedora *)
+     "fedora", rpm_base "fedora" "25"; (* latest fedora *)
      "oraclelinux-7", rpm_base ~ocaml:false "oraclelinux" "7";
      "oraclelinux", rpm_base ~ocaml:false "oraclelinux" "7"; (* latest oraclelinux *)
+     "alpine-3.6", apk_base "alpine" "3.6";
      "alpine-3.5", apk_base "alpine" "3.5";
      "alpine-3.4", apk_base ~add_custom_apk:true "alpine" "3.4";
      "alpine-3.3", apk_base ~add_custom_apk:true "alpine" "3.3";
-     "alpine-3", apk_base "alpine" "3.5";
-     "alpine", apk_base "alpine" "3.5"; (* latest alpine *)
+     "alpine-3", apk_base "alpine" "3.6";
+     "alpine", apk_base "alpine" "3.6"; (* latest alpine *)
      "opensuse-42.1", zypper_base "opensuse" "42.1";
      "opensuse-42.2", zypper_base "opensuse" "42.2";
      "opensuse", zypper_base "opensuse" "42.2"; (* latest opensuse *)
