@@ -32,11 +32,10 @@ let generate ~opam_version ~output_dir =
   Dockerfile_distro.generate_dockerfiles_in_git_branches output_dir [
      "ubuntu-12.04", apt_base "ubuntu" "precise";
      "ubuntu-14.04", apt_base "ubuntu" "trusty";
-     "ubuntu-15.04", apt_base "ubuntu" "vivid";
-     "ubuntu-15.10", apt_base "ubuntu" "wily";
      "ubuntu-16.04", apt_base "ubuntu" "xenial";
      "ubuntu-16.10", apt_base "ubuntu" "yakkety";
      "ubuntu-17.04", apt_base "ubuntu" "zesty";
+     "ubuntu-17.10", apt_base "ubuntu" "artful";
      "ubuntu", apt_base "ubuntu" "xenial"; (* latest lts ubuntu *)
      "debian-10", apt_base "debian" "buster"; (* 10 isnt tagged on Hub yet *)
      "debian-9", apt_base "debian" "9";
@@ -53,13 +52,12 @@ let generate ~opam_version ~output_dir =
      "fedora-23", rpm_base "fedora" "23";
      "fedora-24", rpm_base "fedora" "24";
      "fedora-25", rpm_base "fedora" "25";
+     "fedora-26", rpm_base "fedora" "26";
      "fedora", rpm_base "fedora" "25"; (* latest fedora *)
      "oraclelinux-7", rpm_base ~ocaml:false "oraclelinux" "7";
      "oraclelinux", rpm_base ~ocaml:false "oraclelinux" "7"; (* latest oraclelinux *)
      "alpine-3.6", apk_base "alpine" "3.6";
      "alpine-3.5", apk_base "alpine" "3.5";
-     "alpine-3.4", apk_base ~add_custom_apk:true "alpine" "3.4";
-     "alpine-3.3", apk_base ~add_custom_apk:true "alpine" "3.3";
      "alpine-3", apk_base "alpine" "3.6";
      "alpine", apk_base "alpine" "3.6"; (* latest alpine *)
      "opensuse-42.1", zypper_base "opensuse" "42.1";
